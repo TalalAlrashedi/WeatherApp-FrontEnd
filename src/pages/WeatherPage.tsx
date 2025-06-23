@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import Swal from "sweetalert2";
+import type { WeatherDataType } from "../utils/weatherTypes";
 
 const WeatherPage = () => {
   const [latitude, setLatitude] = useState("");
@@ -34,7 +35,7 @@ const WeatherPage = () => {
   const fetchWeather = async () => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get(
+      const response = await axiosInstance.get<{ data: WeatherDataType }>(
         `/weather?lat=${latitude}&lon=${longitude}`
       );
       setWeather(response.data.data);
@@ -49,7 +50,6 @@ const WeatherPage = () => {
       setLoading(false);
     }
   };
-
 
   const handleLogout = () => {
     Swal.fire({
@@ -68,9 +68,7 @@ const WeatherPage = () => {
   };
 
   return (
-
     <div className="min-h-screen flex items-center justify-center bg-sky-100 px-4 py-8">
-      
       <div className="w-full max-w-2xl p-8 bg-white/80 backdrop-blur-md shadow-2xl rounded-3xl flex flex-col gap-6">
         <button
           onClick={handleLogout}
@@ -78,7 +76,6 @@ const WeatherPage = () => {
         >
           تسجيل الخروج
         </button>
-        
 
         <h2 className="text-4xl font-extrabold text-center text-sky-800 mb-4">
           البحث عن حالة الطقس{" "}
@@ -108,7 +105,6 @@ const WeatherPage = () => {
         >
           عرض الطقس
         </button>
-        
 
         {loading && (
           <div className="text-center text-sky-700 text-lg font-medium">
@@ -153,9 +149,7 @@ const WeatherPage = () => {
           </div>
         )}
       </div>
-      
     </div>
-    
   );
 };
 
