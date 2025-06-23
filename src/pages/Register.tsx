@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
+type SignupResponse = {
+  data: {
+    token: string;
+  };
+};
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,7 +17,11 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axiosInstance.post("/auth/signup", { email, password });
+      const res = await axiosInstance.post<SignupResponse>("/auth/signup", {
+        email,
+        password,
+      });
+      console.log(res.data.data.token);
 
       console.log("Response from backend:", res.data);
 

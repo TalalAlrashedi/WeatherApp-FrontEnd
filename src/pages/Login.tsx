@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
+
+type LoginResponse = {
+  data: {
+    token: string;
+  };
+};
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,8 +18,10 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axiosInstance.post("/auth/signin", { email, password });
-
+      const res = await axiosInstance.post<LoginResponse>("/auth/signin", {
+        email,
+        password,
+      });
       const token = res.data.data.token;
 
       if (token) {
@@ -84,7 +92,10 @@ const Login = () => {
 
         <p className="text-center text-gray-600">
           ليس لديك حساب؟{" "}
-          <Link to="/register" className="text-sky-700 hover:underline font-semibold">
+          <Link
+            to="/register"
+            className="text-sky-700 hover:underline font-semibold"
+          >
             إنشاء حساب جديد
           </Link>
         </p>
