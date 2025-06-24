@@ -1,13 +1,7 @@
 import { useState } from "react";
-import axiosInstance from "../utils/axiosInstance";
 import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
-
-type LoginResponse = {
-  data: {
-    token: string;
-  };
-};
+import { login } from "../services/authService";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -17,12 +11,11 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
-      const res = await axiosInstance.post<LoginResponse>("/auth/signin", {
-        email,
-        password,
-      });
-      const token = res.data.data.token;
+      const res = await login(email, password);
+
+      const token = res.data?.data?.token;
 
       if (token) {
         localStorage.setItem("token", token);
@@ -46,8 +39,8 @@ const Login = () => {
       setError("فشل تسجيل الدخول، تحقق من بياناتك.");
       await Swal.fire({
         icon: "error",
-        title: "خطأ",
-        text: "فشل تسجيل الدخول، تحقق من بياناتك.",
+        title: "فشل تسجيل الدخول",
+        text: "تحقق من البريد وكلمة المرور.",
       });
       console.error("Login error:", err.response || err.message || err);
     }
@@ -96,7 +89,7 @@ const Login = () => {
             to="/register"
             className="text-sky-700 hover:underline font-semibold"
           >
-            إنشاء حساب جديد
+            سجل الآن
           </Link>
         </p>
       </form>

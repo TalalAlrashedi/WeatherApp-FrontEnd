@@ -1,13 +1,8 @@
 import { useState } from "react";
-import axiosInstance from "../utils/axiosInstance";
 import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { register } from "../services/authService"; 
 
-type SignupResponse = {
-  data: {
-    token: string;
-  };
-};
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,15 +12,8 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axiosInstance.post<SignupResponse>("/auth/signup", {
-        email,
-        password,
-      });
-      console.log(res.data.data.token);
-
-      console.log("Response from backend:", res.data);
-
-      const token = res.data.data.token;
+      const res = await register(email, password); 
+      const token = res.data.token;
 
       if (token) {
         localStorage.setItem("token", token);
@@ -45,22 +33,21 @@ const Register = () => {
         });
       }
     } catch (err: any) {
-      if (err.response && err.response.status === 409) {
-        setError("البريد الإلكتروني مستخدم مسبقًا، الرجاء اختيار بريد آخر.");
+      if (err.response?.status === 409) {
+        setError("البريد الإلكتروني مستخدم مسبقًا.");
         await Swal.fire({
           icon: "error",
           title: "خطأ",
           text: "البريد الإلكتروني مستخدم مسبقًا، الرجاء اختيار بريد آخر.",
         });
       } else {
-        setError("فشل إنشاء الحساب. تأكد من البيانات.");
+        setError("فشل إنشاء الحساب.");
         await Swal.fire({
           icon: "error",
           title: "خطأ",
           text: "فشل إنشاء الحساب. تأكد من البيانات.",
         });
       }
-      console.error("Registration error:", err.response || err.message || err);
     }
   };
 
@@ -70,9 +57,7 @@ const Register = () => {
         onSubmit={handleSubmit}
         className="w-full max-w-md p-8 bg-white/70 backdrop-blur-md shadow-xl rounded-3xl flex flex-col gap-6"
       >
-        <h2 className="text-3xl font-extrabold text-center text-sky-800">
-          تسجيل جديد
-        </h2>
+        <h2 className="text-3xl font-extrabold text-center text-sky-800">تسجيل جديد</h2>
 
         <input
           type="email"
@@ -103,10 +88,7 @@ const Register = () => {
 
         <p className="text-center text-gray-600">
           لديك حساب؟{" "}
-          <Link
-            to="/login"
-            className="text-sky-700 hover:underline font-semibold"
-          >
+          <Link to="/login" className="text-sky-700 hover:underline font-semibold">
             تسجيل الدخول
           </Link>
         </p>

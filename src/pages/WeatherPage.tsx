@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import Swal from "sweetalert2";
 import type { WeatherDataType } from "../utils/weatherTypes";
+import { getWeather } from "../services/weatherService";
+// import ThemeToggle from "../components/ThemeToggle";
 
 const WeatherPage = () => {
   const [latitude, setLatitude] = useState("");
@@ -76,6 +78,7 @@ const WeatherPage = () => {
         >
           تسجيل الخروج
         </button>
+        {/* <ThemeToggle /> */}
 
         <h2 className="text-4xl font-extrabold text-center text-sky-800 mb-4">
           البحث عن حالة الطقس{" "}
