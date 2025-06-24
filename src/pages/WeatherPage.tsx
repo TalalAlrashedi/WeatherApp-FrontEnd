@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import Swal from "sweetalert2";
-import type { WeatherDataType } from "../utils/weatherTypes";
-import { getWeather } from "../services/weatherService";
+// import type { WeatherDataType } from "../utils/weatherTypes";
+// import { getWeather } from "../services/weatherService";
 // import ThemeToggle from "../components/ThemeToggle";
 
 const WeatherPage = () => {
