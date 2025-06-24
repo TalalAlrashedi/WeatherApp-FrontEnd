@@ -13,7 +13,7 @@ const Register = () => {
     e.preventDefault();
     try {
       const res = await register(email, password); 
-      const token = res.data.token;
+      const token = res.data.data.token;
 
       if (token) {
         localStorage.setItem("token", token);

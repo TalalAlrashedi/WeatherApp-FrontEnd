@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { login } from "../services/authService";
-
+import { Link } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,15 +11,12 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
       const res = await login(email, password);
-
-      const token = res.data?.data?.token;
+      const token = res.data.data.token;
 
       if (token) {
         localStorage.setItem("token", token);
-        setError("");
         await Swal.fire({
           icon: "success",
           title: "تم تسجيل الدخول بنجاح!",
@@ -28,21 +25,11 @@ const Login = () => {
         });
         navigate("/");
       } else {
-        setError("لم يتم استلام التوكن من السيرفر.");
-        await Swal.fire({
-          icon: "error",
-          title: "خطأ",
-          text: "لم يتم استلام التوكن من السيرفر.",
-        });
+        throw new Error("Token not found");
       }
     } catch (err: any) {
-      setError("فشل تسجيل الدخول، تحقق من بياناتك.");
-      await Swal.fire({
-        icon: "error",
-        title: "فشل تسجيل الدخول",
-        text: "تحقق من البريد وكلمة المرور.",
-      });
-      console.error("Login error:", err.response || err.message || err);
+      setError("بيانات الدخول غير صحيحة.");
+      Swal.fire("خطأ", "البريد الإلكتروني أو كلمة المرور غير صحيحة.", "error");
     }
   };
 
@@ -61,7 +48,7 @@ const Login = () => {
           placeholder="البريد الإلكتروني"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border border-gray-300 rounded-xl px-4 py-3 bg-white/90 focus:outline-none focus:ring-2 focus:ring-sky-500 transition"
+          className="border border-gray-300 rounded-xl px-4 py-3"
           required
         />
 
@@ -70,7 +57,7 @@ const Login = () => {
           placeholder="كلمة المرور"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border border-gray-300 rounded-xl px-4 py-3 bg-white/90 focus:outline-none focus:ring-2 focus:ring-sky-500 transition"
+          className="border border-gray-300 rounded-xl px-4 py-3"
           required
         />
 
@@ -78,20 +65,11 @@ const Login = () => {
           type="submit"
           className="bg-sky-600 hover:bg-sky-700 text-white py-3 rounded-xl text-lg transition"
         >
-          تسجيل الدخول
+          دخول
         </button>
 
         {error && <p className="text-red-500 text-center">{error}</p>}
-
-        <p className="text-center text-gray-600">
-          ليس لديك حساب؟{" "}
-          <Link
-            to="/register"
-            className="text-sky-700 hover:underline font-semibold"
-          >
-            سجل الآن
-          </Link>
-        </p>
+        <p className="text-center text-gray-600"> ليس لديك حساب؟{" "} <Link to="/register" className="text-sky-700 hover:underline font-semibold" > سجل الآن </Link> </p>
       </form>
     </div>
   );
