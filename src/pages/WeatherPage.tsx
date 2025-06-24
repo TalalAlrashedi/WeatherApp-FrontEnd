@@ -37,10 +37,8 @@ const WeatherPage = () => {
   const fetchWeather = async () => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get<{ data: WeatherDataType }>(
-        `/weather?lat=${latitude}&lon=${longitude}`
-      );
-      setWeather(response.data.data);
+      const response = await getWeather(latitude, longitude); 
+      setWeather(response.data);
     } catch (err) {
       setWeather(null);
       Swal.fire({
